@@ -11,7 +11,7 @@ We can only feature one awesome programmer at a time.
 Find comments below to help you along.
 */
 
-import React from 'react';
+import React, {useState} from 'react';
 
 // Use this variable ONLY to initialize a slice of state!
 // There is something in the JSX right now breaking this rule.
@@ -27,12 +27,22 @@ const listOfAwesome = [
 export default function Programmers() {
   // We'll have to use the state hook twice, as we need two slices of state.
   // The programmers on the one hand, and the id of the featured programmer on the other.
+  const [programmers, setProgrammer] = useState(listOfAwesome)
+  const [featuredProgrammerID, setFeaturedProgrammerID] = useState(listOfAwesome[0]["id"])
 
   const getNameOfFeatured = () => {
     // This is not an event handler but a helper function. See its usage below.
     // It's going to need information from both slices of state!
     // Using the currently celebrated id, find inside the programmers slice of state
     // the _name_ of the currently celebrated programmer, and return it.
+    
+    //return `${featuredProgrammerID}`
+    //return `${programmers[0]["id"] == 1}` 
+
+    // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+    const found = programmers.find(element => element.id == featuredProgrammerID)
+    console.log(found.name)
+    return `${found.name}`
   };
 
   const style = {
@@ -49,9 +59,9 @@ export default function Programmers() {
           /* Nasty bug! We should map over a slice of state, instead of 'listOfAwesome'.
           We might say: "it works, though!" But if the list of programmers is not state,
           we could never add or edit programmers in the future. The list would be a static thing. ;)" */
-          listOfAwesome.map(dev =>
+          programmers.map(dev =>
             <div key={dev.id}>
-              {dev.name} <button onClick={() => { /* set the featured id passing dev.id */ }}>Feature</button>
+              {dev.name} <button onClick={() => { setFeaturedProgrammerID(dev.id)/* set the featured id passing dev.id */ }}>Feature</button>
             </div>
           )
         }
@@ -59,9 +69,9 @@ export default function Programmers() {
       {
         // Ternaries are fantastic to render "one thing or the other" depending on the "truthiness" of something.
         // Pseudo-code: if the currently featured id is truthy render div 1, otherwise render div 2. Fix!
-        false
+        featuredProgrammerID === true
           ? <div style={style}>🎉 Let&apos;s celebrate {getNameOfFeatured()}! 🥳</div>
-          : <div style={style}>Pick an awesome programmer</div>
+          : <div style={style}>Pick an awesome programmer {getNameOfFeatured()}</div>
       }
     </div>
   );
